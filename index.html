@@ -1,39 +1,93 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset="utf-8">
-    <title>My first three.js app</title>
+  <head>
+    <meta charset="utf-8" />
+    <title>Nine</title>
     <style>
-        body {
-            margin: 0;
-        }
+      body {
+        margin: 0;
+      }
 
-        canvas {
-            display: block;
-        }
+      canvas {
+        display: block;
+      }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r120/three.js"
-        integrity="sha512-QCGz+55D77J/HfFhwUYiQ1jMFoaW0ObpqJFV2YwKqn+QhxEqlLtvG/7QOMBcRl/G3wWdLXe3hQ2I5oyPBHLStA=="
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/loaders/GLTFLoader.js"></script>
-</head>
+  </head>
 
-<body>
-    <script>
-        // var loader = new GLTFLoader();
-        var loader = new THREE.GLTFLoader();
+  <body>
+    <script type="module">
+      // Find the latest version by visiting https://unpkg.com/three. The URL will redirect to the newest stable release.
+      import * as THREE from "https://unpkg.com/three@0.120.1/build/three.module.js";
+      import { GLTFLoader } from 'https://unpkg.com/three@0.120.1/examples/jsm/loaders/GLTFLoader.js';
 
-        loader.load('scene.gltf', function (gltf) {
+      const scene = new THREE.Scene();
 
-            scene.add(gltf.scene);
+      var camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
 
-        }, undefined, function (error) {
+      // var renderer = new THREE.WebGLRenderer();
+      var renderer = new THREE.WebGLRenderer({ alpha: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
 
-            console.error(error);
+      //camera.position.z = 0.025;
+      camera.position.z = 2;
 
-        });
+       var light = new THREE.AmbientLight(0x404040, 30); // soft white light
+       scene.add(light);
+
+      var light = new THREE.PointLight(0xff0000, 1, 100);
+      light.position.set(50, 50, 50);
+      scene.add(light);
+
+      var light = new THREE.PointLight(0xffffff, 5, 100);
+      light.position.set(-50, -50, 50);
+      scene.add(light);
+
+      var nine;
+
+      var loader = new GLTFLoader();
+      loader.load(
+        "scene.gltf",
+        function(gltf) {
+          nine = gltf.scene;
+          scene.add(nine);
+        },
+        undefined,
+        function(error) {
+          console.error(error);
+        }
+      );
+
+      /*
+      var loadingManager = new THREE.LoadingManager(function() {
+        scene.add(nine);
+      });
+
+      var textureLoader = new THREE.TextureLoader();
+      var texture = textureLoader.load("../model/car_white.jpg");
+
+      var loader = new THREE.ColladaLoader(loadingManager);
+      loader.load("./models/nine/nine.dae", function(collada) {
+        nine = collada.scene;
+      });
+      */
+
+      var animate = function() {
+        requestAnimationFrame(animate);
+
+        if (nine.rotation != null) {
+          nine.rotation.y += 0.01;
+        }
+
+        renderer.render(scene, camera);
+      };
+
+      animate();
     </script>
-</body>
-
+  </body>
 </html>

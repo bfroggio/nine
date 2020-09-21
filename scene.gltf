@@ -711,7 +711,7 @@
   "materials": [
     {
       "alphaMode": "BLEND",
-      "doubleSided": true,
+      "doubleSided": false,
       "emissiveFactor": [
         1,
         1,
